@@ -20,7 +20,16 @@
 
 # misc
 .DS_Store
+Thumbs.db
+Desktop.ini
 *.pem
+*.log
+*.tmp
+*.bak
+*.tar.gz
+*.zip
+.idea/
+.vscode/
 
 # debug
 npm-debug.log*
@@ -30,6 +39,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel
