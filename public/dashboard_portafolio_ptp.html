@@ -438,21 +438,27 @@
     .progress-fill { display: block; height: 100%; border-radius: inherit; background: var(--gold); }
     .progress-fill.financial { background: var(--navy); }
     .tracking-note { margin: 10px 0 0; color: var(--muted); font-size: 11px; }
-    .rsm-hero { display:flex; justify-content:space-between; gap:16px; align-items:center; padding: 18px 20px; margin-bottom: 10px; overflow: hidden; color: #fff; border-bottom: 4px solid var(--gold); background: var(--navy-2); }
+    .rsm-hero { display:flex; justify-content:space-between; gap:16px; align-items:center; padding: 19px 21px; margin-bottom: 10px; overflow: hidden; color: #fff; border-bottom: 4px solid var(--gold); background: linear-gradient(120deg,var(--navy-2),#173c61); }
     .rsm-hero .eyebrow { color: var(--gold); }
     .rsm-hero h2 { margin: 2px 0 4px; font-size: 25px; }
-    .rsm-hero p { margin: 0; color: rgba(255,255,255,.74); font-size: 12px; }
+    .rsm-hero p { margin: 0; color: rgba(255,255,255,.78); font-size: 12px; }
+    .rsm-hero-meta { display:flex; flex-wrap:wrap; gap:7px; justify-content:flex-end; }
+    .rsm-hero-chip { padding:7px 10px; border:1px solid rgba(255,255,255,.18); border-radius:999px; color:#fff; background:rgba(255,255,255,.08); font-size:10px; font-weight:800; white-space:nowrap; }
     .rsm-filter-panel { padding: 11px 14px; margin-bottom: 10px; }
     .rsm-toolbar { display: grid; grid-template-columns: minmax(240px,1.2fr) repeat(3,minmax(170px,.8fr)) auto; gap: 9px; align-items: end; }
-    .rsm-kpis { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: 10px; margin-bottom: 10px; }
-    .rsm-kpi { min-height: 112px; padding: 13px 14px; border: 1px solid var(--line); border-top: 4px solid var(--navy); border-radius: 10px; background: #fff; }
+    .rsm-kpis { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 10px; margin-bottom: 10px; }
+    .rsm-kpi { min-height: 124px; padding: 14px 15px; border: 1px solid var(--line); border-top: 4px solid var(--navy); border-radius: 10px; background: #fff; box-shadow:0 4px 14px rgba(23,45,75,.04); }
     .rsm-kpi.submitted { border-top-color: #198f66; }
     .rsm-kpi.within { border-top-color: #198f66; }
     .rsm-kpi.pending { border-top-color: var(--gold); }
     .rsm-kpi span { display: block; color: var(--muted); font-size: 10px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
     .rsm-kpi strong { display: block; margin: 7px 0 4px; color: var(--navy); font-size: 29px; line-height: 1; }
     .rsm-kpi small { color: var(--muted); font-size: 11px; line-height: 1.35; }
+    .rsm-kpi-breakdown { display:flex; flex-wrap:wrap; gap:5px 10px; margin-top:8px; padding-top:8px; border-top:1px solid #edf0f4; color:var(--muted); font-size:10px; }
+    .rsm-kpi-breakdown b { color:var(--navy); }
     .rsm-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; margin-bottom: 10px; }
+    .rsm-overview-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin-bottom:10px; }
+    .rsm-analysis-grid { display:grid; grid-template-columns:minmax(0,1.45fr) minmax(300px,.55fr); gap:10px; margin-bottom:10px; }
     .rsm-panel { min-width: 0; padding: 16px; }
     .rsm-section-label { margin: 0 0 4px; color: var(--gold); font-size: 10px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
     .rsm-panel h2 { margin: 0; color: var(--navy); font-size: 19px; }
@@ -488,6 +494,10 @@
     .rsm-findings { display: grid; grid-template-columns: 1.3fr .7fr; gap: 10px; margin-bottom: 10px; }
     .rsm-finding-list { display: grid; gap: 8px; margin-top: 12px; }
     .rsm-finding { padding: 10px 11px; border-left: 4px solid #e79a08; border-radius: 0 8px 8px 0; color: var(--navy); background: #fff8e9; font-size: 11px; }
+    .rsm-finding { display:grid; grid-template-columns:28px minmax(0,1fr); gap:9px; align-items:start; }
+    .rsm-finding-index { display:grid; place-items:center; width:26px; height:26px; border-radius:7px; color:#fff; background:var(--navy); font-size:10px; font-weight:900; }
+    .rsm-finding strong { display:block; margin-bottom:3px; color:var(--navy); font-size:11px; }
+    .rsm-finding p { margin:0; color:var(--muted); line-height:1.4; }
     .rsm-quality { padding: 12px; border-radius: 9px; color: var(--muted); background: #f5f7f9; font-size: 11px; line-height: 1.5; }
     .rsm-table .rsm-project { color: var(--navy); font-weight: 800; }
     .rsm-table .rsm-project small { display: block; margin-top: 2px; color: var(--muted); font-weight: 400; }
@@ -532,6 +542,8 @@
     .rsm-status.conforme, .rsm-status.yes { color:#116746; background:#e4f5ed; }
     .rsm-status.observations { color:#8a5a00; background:#fff2d7; }
     .rsm-status.no { color:#596273; background:#edf0f4; }
+    .rsm-status.physical-type { color:#153b62; background:#e7eef6; }
+    .rsm-status.financial-type { color:#a6161c; background:#fdebed; }
     .rsm-table .rsm-record { color:var(--navy); font-weight:800; }
     .rsm-table .rsm-record small { display:block; margin-top:2px; color:var(--muted); font-weight:400; }
     footer { border-top: 1px solid var(--line); color: var(--muted); background: #fff; }
@@ -549,6 +561,8 @@
       .financial-source-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .rsm-toolbar { grid-template-columns: repeat(2,minmax(0,1fr)); }
       .rsm-kpis { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .rsm-overview-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .rsm-analysis-grid { grid-template-columns:1fr; }
     }
     @media (max-width: 820px) {
       .header-inner { grid-template-columns: minmax(210px, 280px) 1fr; gap: 16px; }
@@ -613,7 +627,9 @@
       .financial-detail-table td { grid-template-columns: 118px minmax(0, 1fr); text-align: left !important; white-space: normal !important; }
       .financial-detail-table td:first-child { display: grid; }
       .financial-detail-table td:first-child::before { display: block; }
-      .rsm-toolbar, .rsm-kpis, .rsm-state-charts, .rsm-detail-grid { grid-template-columns: 1fr; }
+      .rsm-toolbar, .rsm-kpis, .rsm-overview-grid, .rsm-state-charts, .rsm-detail-grid { grid-template-columns: 1fr; }
+      .rsm-hero { align-items:flex-start; flex-direction:column; }
+      .rsm-hero-meta { justify-content:flex-start; }
       .rsm-hero h2 { font-size: 21px; }
       .rsm-kpi { min-height: 98px; }
       .rsm-state-row { grid-template-columns: 86px 1fr 54px; }
@@ -831,11 +847,11 @@
     <div class="tab-panel" id="panel-rsm" role="tabpanel" aria-labelledby="tab-rsm" hidden>
       <section class="panel rsm-hero">
         <div>
-          <p class="eyebrow">Reporte Registro RSM</p>
-          <h2>Análisis de avance y validación</h2>
-          <p>Fuente exclusiva: «reporte-rsm (12).xlsx» · Hojas «Avance del RSM» y «Estado validación del RSM»</p>
+          <p class="eyebrow">ITP · Red CITE · Seguimiento RSM</p>
+          <h2>Avance y validación del Registro RSM</h2>
+          <p>Lectura ejecutiva de las hojas «Avance del RSM» y «Estado validación del RSM»</p>
         </div>
-        <span class="tag">Meses 1–4</span>
+        <div class="rsm-hero-meta"><span class="rsm-hero-chip">RSM · Meses 1–4</span><span class="rsm-hero-chip" id="rsm-cut-date">Último movimiento: —</span></div>
       </section>
 
       <section class="panel rsm-filter-panel" aria-label="Filtros del Registro RSM">
@@ -849,45 +865,54 @@
       </section>
 
       <section class="rsm-kpis" aria-label="Indicadores del Registro RSM">
-        <article class="rsm-kpi"><span>Registros de avance</span><strong id="rsm-advance-total">148</strong><small id="rsm-advance-note">Filas con datos en E:H</small></article>
-        <article class="rsm-kpi submitted"><span>Avances con fecha</span><strong id="rsm-dated-total">112</strong><small id="rsm-dated-note">75.7% de los registros</small></article>
-        <article class="rsm-kpi"><span>Registros de validación</span><strong id="rsm-validation-total">49</strong><small id="rsm-validation-note">Filas con datos en D:F</small></article>
-        <article class="rsm-kpi within"><span>Conformes</span><strong id="rsm-conforme-total">28</strong><small id="rsm-conforme-note">57.1% de las validaciones</small></article>
-        <article class="rsm-kpi pending"><span>Con observaciones</span><strong id="rsm-observed-total">21</strong><small id="rsm-observed-note">42.9% de las validaciones</small></article>
+        <article class="rsm-kpi"><span>Registros de avance</span><strong id="rsm-advance-total">148</strong><small id="rsm-advance-note">Filas analizadas de E:H</small><div class="rsm-kpi-breakdown"><span>Física <b id="rsm-physical-total">56</b></span><span>Financiera/PAC <b id="rsm-financial-total">56</b></span><span>Sin tipo <b id="rsm-untyped-total">36</b></span></div></article>
+        <article class="rsm-kpi submitted"><span>Avances con fecha</span><strong id="rsm-dated-total">112</strong><small id="rsm-dated-note">75.7% de los registros</small><div class="rsm-kpi-breakdown"><span>Fecha consignada en la fuente</span></div></article>
+        <article class="rsm-kpi within"><span>Registros de validación</span><strong id="rsm-validation-total">49</strong><small id="rsm-validation-note">Filas analizadas de D:F</small><div class="rsm-kpi-breakdown"><span>Conforme <b id="rsm-conforme-total">28</b></span><span>Con observaciones <b id="rsm-observed-total">21</b></span></div></article>
+        <article class="rsm-kpi pending"><span>Información pendiente</span><strong id="rsm-incomplete-total">36</strong><small id="rsm-incomplete-note">Registros con algún campo autorizado no consignado</small><div class="rsm-kpi-breakdown"><span>No se completan valores ausentes</span></div></article>
       </section>
 
-      <section class="rsm-grid">
+      <section class="rsm-overview-grid">
         <article class="panel rsm-panel">
-          <div class="chart-title"><div><h3>Avances por mes y tipo</h3><p>Distribución independiente de los registros de la hoja «Avance del RSM».</p></div></div>
+          <p class="rsm-section-label">Estado del avance</p>
+          <div class="chart-title"><div><h3>Composición por mes y tipo</h3><p>Distribución de los registros de «Avance del RSM».</p></div></div>
           <div id="rsm-advance-chart" class="rsm-chart-block"></div>
           <div class="rsm-legend"><span><i style="background:#172d4b"></i>Ejecución física</span><span><i style="background:#ed1c24"></i>Ejecución financiera y PAC</span><span><i style="background:#9fa8b8"></i>No registrado</span></div>
         </article>
         <article class="panel rsm-panel">
-          <div class="chart-title"><div><h3>Estado de validación por mes</h3><p>Resultados de la hoja «Estado validación del RSM».</p></div></div>
+          <p class="rsm-section-label">Estado de validación</p>
+          <div class="chart-title"><div><h3>Resultado por mes</h3><p>Registros de «Estado validación del RSM».</p></div></div>
           <div id="rsm-validation-chart" class="rsm-chart-block"></div>
           <div class="rsm-legend"><span><i style="background:#198f66"></i>Conforme</span><span><i style="background:#e79a08"></i>Conforme con observaciones</span></div>
         </article>
-      </section>
-
-      <section class="rsm-grid">
         <article class="panel rsm-panel">
-          <div class="chart-title"><div><h3>Evolución temporal de registros</h3><p>Volumen diario de avances registrados y validaciones realizadas.</p></div></div>
-          <div id="rsm-timeline-chart" class="rsm-timeline-chart"></div>
-          <div class="rsm-legend"><span><i style="background:#172d4b"></i>Avances</span><span><i style="background:#198f66"></i>Validaciones</span></div>
-        </article>
-        <article class="panel rsm-panel">
-          <div class="chart-title"><div><h3>Disponibilidad de anexo</h3><p>Contenido real de la columna E de «Avance del RSM».</p></div></div>
+          <p class="rsm-section-label">Disponibilidad documental</p>
+          <div class="chart-title"><div><h3>Registro de anexo</h3><p>Contenido de la columna E de «Avance del RSM».</p></div></div>
           <div id="rsm-annex-chart" class="rsm-chart-block"></div>
         </article>
       </section>
 
+      <section class="rsm-analysis-grid">
+        <article class="panel rsm-panel">
+          <p class="rsm-section-label">Evolución temporal</p>
+          <div class="chart-title"><div><h3>Registros y validaciones por fecha</h3><p>Volumen diario de movimientos consignados en ambas hojas.</p></div></div>
+          <div id="rsm-timeline-chart" class="rsm-timeline-chart"></div>
+          <div class="rsm-legend"><span><i style="background:#172d4b"></i>Avances</span><span><i style="background:#198f66"></i>Validaciones</span></div>
+        </article>
+        <article class="panel rsm-panel">
+          <p class="rsm-section-label">Lectura ejecutiva</p>
+          <div class="chart-title"><div><h3>Hallazgos del corte</h3><p>Resumen automático de la selección activa.</p></div></div>
+          <div class="rsm-finding-list" id="rsm-findings"></div>
+        </article>
+      </section>
+
       <section class="panel rsm-panel">
-        <div class="chart-title"><div><h3>Comparativo mensual de volúmenes</h3><p>Comparación agregada; no implica correspondencia registro a registro entre las hojas.</p></div></div>
+        <p class="rsm-section-label">Comparación mensual</p>
+        <div class="chart-title"><div><h3>Avance reportado y validación</h3><p>Comparación agregada; no implica correspondencia registro a registro entre las hojas.</p></div></div>
         <div class="table-scroll"><table class="compact-table"><caption class="sr-only">Comparativo mensual de avances y validaciones</caption><thead><tr><th>Mes</th><th>Avances</th><th>Con fecha</th><th>Validaciones</th><th>Conforme</th><th>Con observaciones</th></tr></thead><tbody id="rsm-monthly-rows"></tbody></table></div>
       </section>
 
       <section class="panel rsm-panel rsm-records-panel">
-        <div class="table-toolbar"><div><h2>Detalle de registros</h2><div id="rsm-result-count" aria-live="polite"></div></div><div class="rsm-view-switch" role="group" aria-label="Tipo de tabla"><button type="button" class="rsm-view-button" data-rsm-view="advance" aria-pressed="true">Avances</button><button type="button" class="rsm-view-button" data-rsm-view="validation" aria-pressed="false">Validaciones</button></div></div>
+        <div class="table-toolbar"><div><p class="rsm-section-label">Detalle semaforizado</p><h2>Registros analizados</h2><div id="rsm-result-count" aria-live="polite"></div></div><div class="rsm-view-switch" role="group" aria-label="Tipo de tabla"><button type="button" class="rsm-view-button" data-rsm-view="advance" aria-pressed="true">Avances</button><button type="button" class="rsm-view-button" data-rsm-view="validation" aria-pressed="false">Validaciones</button></div></div>
         <div class="table-scroll">
           <table class="compact-table rsm-table">
             <caption class="sr-only">Detalle de registros RSM según la selección activa</caption>
@@ -1574,6 +1599,7 @@
     const rsmStatusClass = value => ({
       'Conforme':'conforme', 'Conforme con observaciones':'observations', 'Sí':'yes', 'No':'no'
     }[value] || 'missing');
+    const rsmAdvanceTypeClass = value => /física/i.test(value || '') ? 'physical-type' : /financiera/i.test(value || '') ? 'financial-type' : 'missing';
     const rsmLabel = value => value === null || value === undefined || value === '' ? 'No registrado' : String(value);
     const rsmMonthLabel = value => value === null || value === undefined ? 'No registrado' : `Mes ${value}`;
     const rsmDate = value => value ? new Intl.DateTimeFormat('es-PE', { day:'2-digit', month:'2-digit', year:'numeric' }).format(new Date(value)) : 'No registrado';
@@ -1608,16 +1634,26 @@
       const dated = advance.filter(record => record.registration_datetime).length;
       const conformes = validation.filter(record => record.validation_state === 'Conforme').length;
       const observations = validation.filter(record => record.validation_state === 'Conforme con observaciones').length;
+      const physical = advance.filter(record => /física/i.test(record.advance_type || '')).length;
+      const financial = advance.filter(record => /financiera/i.test(record.advance_type || '')).length;
+      const untyped = advance.filter(record => !record.advance_type).length;
+      const incompleteAdvance = advance.filter(record => record.month === null || !record.advance_type || !record.registration_datetime).length;
+      const incompleteValidation = validation.filter(record => record.month === null || !record.validation_datetime || !record.validation_state).length;
+      const latestMovement = [...advance.map(record => record.registration_datetime), ...validation.map(record => record.validation_datetime)].filter(Boolean).sort().at(-1);
       document.getElementById('rsm-advance-total').textContent = number(advance.length);
       document.getElementById('rsm-advance-note').textContent = `${number(advance.filter(record => record.month === null).length)} con mes no registrado`;
+      document.getElementById('rsm-physical-total').textContent = number(physical);
+      document.getElementById('rsm-financial-total').textContent = number(financial);
+      document.getElementById('rsm-untyped-total').textContent = number(untyped);
       document.getElementById('rsm-dated-total').textContent = number(dated);
       document.getElementById('rsm-dated-note').textContent = `${rsmPct(dated, advance.length).toFixed(1)}% de los registros filtrados`;
       document.getElementById('rsm-validation-total').textContent = number(validation.length);
       document.getElementById('rsm-validation-note').textContent = 'Registros filtrados de D:F';
       document.getElementById('rsm-conforme-total').textContent = number(conformes);
-      document.getElementById('rsm-conforme-note').textContent = `${rsmPct(conformes, validation.length).toFixed(1)}% de las validaciones`;
       document.getElementById('rsm-observed-total').textContent = number(observations);
-      document.getElementById('rsm-observed-note').textContent = `${rsmPct(observations, validation.length).toFixed(1)}% de las validaciones`;
+      document.getElementById('rsm-incomplete-total').textContent = number(incompleteAdvance + incompleteValidation);
+      document.getElementById('rsm-incomplete-note').textContent = `Avances: ${number(incompleteAdvance)} · Validaciones: ${number(incompleteValidation)}`;
+      document.getElementById('rsm-cut-date').textContent = `Último movimiento: ${latestMovement ? rsmDate(latestMovement) : 'No registrado'}`;
 
       const monthKeys = els.rsmMonth.value ? [els.rsmMonth.value === 'missing' ? null : Number(els.rsmMonth.value)] : [...rsm.filters.months, null];
       const advanceRows = monthKeys.map(month => {
@@ -1652,6 +1688,8 @@
       const annexCounts = annexOptions.map(value => ({ value, count:advance.filter(record => record.annex === value).length })).filter(item => item.count || item.value !== null);
       const annexMax = Math.max(...annexCounts.map(item => item.count), 1);
       document.getElementById('rsm-annex-chart').innerHTML = annexCounts.map(item => rsmChartRow(rsmLabel(item.value), [{className:item.value === 'Sí' ? 'yes' : item.value === 'No' ? 'no' : 'missing',label:rsmLabel(item.value),value:item.count}], annexMax, `${rsmLabel(item.value)}: ${item.count} registros`)).join('');
+      const annexYes = advance.filter(record => record.annex === 'Sí').length;
+      const annexNo = advance.filter(record => record.annex === 'No').length;
 
       const daily = new Map();
       advance.filter(record => record.registration_datetime).forEach(record => { const key = record.registration_datetime.slice(0,10); const item = daily.get(key) || {advance:0,validation:0}; item.advance += 1; daily.set(key,item); });
@@ -1659,6 +1697,12 @@
       const days = [...daily.entries()].sort((a,b) => a[0].localeCompare(b[0]));
       const dayMax = Math.max(...days.flatMap(([,value]) => [value.advance,value.validation]), 1);
       document.getElementById('rsm-timeline-chart').innerHTML = days.length ? days.map(([date,value]) => `<div class="rsm-day" title="${rsmDate(date)} · ${value.advance} avances · ${value.validation} validaciones"><i class="advance" style="height:${value.advance / dayMax * 100}%"></i><i class="validation" style="height:${value.validation / dayMax * 100}%"></i><small>${rsmShortDate(date)}</small></div>`).join('') : '<div class="empty">No existen fechas para la selección activa.</div>';
+      const findingItems = [
+        {title:'Cobertura de fechas',copy:`${number(dated)} de ${number(advance.length)} avances (${rsmPct(dated, advance.length).toFixed(1)}%) tienen fecha de registro consignada.`},
+        {title:'Resultado de validación',copy:validation.length ? `${number(conformes)} de ${number(validation.length)} validaciones (${rsmPct(conformes, validation.length).toFixed(1)}%) figuran como conformes; ${number(observations)} presentan observaciones.` : 'No existen validaciones para la selección activa.'},
+        {title:'Disponibilidad de anexo',copy:`${number(annexYes)} registros indican que cuentan con anexo y ${number(annexNo)} indican que no.`}
+      ];
+      document.getElementById('rsm-findings').innerHTML = findingItems.map((item,index) => `<article class="rsm-finding"><span class="rsm-finding-index">0${index + 1}</span><div><strong>${esc(item.title)}</strong><p>${esc(item.copy)}</p></div></article>`).join('');
 
       document.getElementById('rsm-monthly-rows').innerHTML = monthKeys.map(month => {
         const advanceRowsForMonth = advance.filter(record => record.month === month);
@@ -1677,7 +1721,7 @@
       document.getElementById('rsm-table-head').innerHTML = isAdvance ? '<tr><th>Registro</th><th>Mes</th><th>Tipo de avance</th><th>¿Cuenta con anexo?</th><th>Fecha de registro</th><th></th></tr>' : '<tr><th>Registro</th><th>Mes</th><th>Fecha de validación</th><th>Estado de validación</th><th></th></tr>';
       els.rsmResultCount.textContent = `${number(items.length)} registro${items.length === 1 ? '' : 's'} en la vista activa`;
       els.rsmEmpty.hidden = items.length !== 0;
-      els.rsmRows.innerHTML = items.map(record => isAdvance ? `<tr><td data-label="Registro"><span class="rsm-record">${esc(record.id)}<small>Fila ${number(record.source_row)}</small></span></td><td data-label="Mes">${esc(rsmMonthLabel(record.month))}</td><td data-label="Tipo de avance">${esc(rsmLabel(record.advance_type))}</td><td data-label="¿Cuenta con anexo?"><span class="rsm-status ${rsmStatusClass(record.annex)}">${esc(rsmLabel(record.annex))}</span></td><td data-label="Fecha de registro">${rsmDate(record.registration_datetime)}</td><td data-label="Detalle"><button type="button" class="review-btn" data-rsm-kind="advance" data-rsm-index="${rsm.advance_records.indexOf(record)}">Revisar</button></td></tr>` : `<tr><td data-label="Registro"><span class="rsm-record">${esc(record.id)}<small>Fila ${number(record.source_row)}</small></span></td><td data-label="Mes">${esc(rsmMonthLabel(record.month))}</td><td data-label="Fecha de validación">${rsmDate(record.validation_datetime)}</td><td data-label="Estado de validación"><span class="rsm-status ${rsmStatusClass(record.validation_state)}">${esc(rsmLabel(record.validation_state))}</span></td><td data-label="Detalle"><button type="button" class="review-btn" data-rsm-kind="validation" data-rsm-index="${rsm.validation_records.indexOf(record)}">Revisar</button></td></tr>`).join('');
+      els.rsmRows.innerHTML = items.map(record => isAdvance ? `<tr><td data-label="Registro"><span class="rsm-record">${esc(record.id)}<small>Fila ${number(record.source_row)}</small></span></td><td data-label="Mes">${esc(rsmMonthLabel(record.month))}</td><td data-label="Tipo de avance"><span class="rsm-status ${rsmAdvanceTypeClass(record.advance_type)}">${esc(rsmLabel(record.advance_type))}</span></td><td data-label="¿Cuenta con anexo?"><span class="rsm-status ${rsmStatusClass(record.annex)}">${esc(rsmLabel(record.annex))}</span></td><td data-label="Fecha de registro">${rsmDate(record.registration_datetime)}</td><td data-label="Detalle"><button type="button" class="review-btn" data-rsm-kind="advance" data-rsm-index="${rsm.advance_records.indexOf(record)}">Revisar</button></td></tr>` : `<tr><td data-label="Registro"><span class="rsm-record">${esc(record.id)}<small>Fila ${number(record.source_row)}</small></span></td><td data-label="Mes">${esc(rsmMonthLabel(record.month))}</td><td data-label="Fecha de validación">${rsmDate(record.validation_datetime)}</td><td data-label="Estado de validación"><span class="rsm-status ${rsmStatusClass(record.validation_state)}">${esc(rsmLabel(record.validation_state))}</span></td><td data-label="Detalle"><button type="button" class="review-btn" data-rsm-kind="validation" data-rsm-index="${rsm.validation_records.indexOf(record)}">Revisar</button></td></tr>`).join('');
       bindRsmActions();
     }
 
