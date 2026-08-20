@@ -11,13 +11,13 @@ Dashboard interactivo para consultar el Portafolio de Proyectos CdD-FEST, su seg
 
 ## Sitio publicado
 
-El dashboard está alojado con acceso privado en:
+El dashboard público, sin inicio de sesión, está disponible en:
 
-<https://portafolio-cdd-fest-2026.walterav0709.chatgpt.site/>
+<https://walterav0709-sys.github.io/dashboard-portafolio-cdd-fest-2026/>
 
 ## Requisitos
 
-- Node.js `>=22.13.0`
+- Node.js `22.x`
 - npm
 
 ## Ejecutar localmente
@@ -46,6 +46,7 @@ app/
 public/
   dashboard_portafolio_ptp.html
                                Dashboard interactivo y datos consolidados
+index.html                    Entrada pública para GitHub Pages
 tests/
   rendered-html.test.mjs      Pruebas básicas del sitio generado
 .openai/hosting.json          Configuración de alojamiento
