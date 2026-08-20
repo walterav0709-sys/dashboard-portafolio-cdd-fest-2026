@@ -313,13 +313,14 @@
     .tracking-heading h2 { margin: 0; color: var(--navy); font-size: 17px; }
     .tracking-heading span { color: var(--muted); font-size: 11px; }
     .tracking-kpis { display: grid; gap: 9px; }
-    .tracking-kpis.physical { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+    .tracking-kpis.physical { grid-template-columns: repeat(7, minmax(0, 1fr)); }
     .tracking-kpis.financial { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .tracking-kpi { min-height: 84px; padding: 10px 12px; border: 1px solid var(--line); border-top: 3px solid var(--gold); border-radius: 9px; background: #fff; }
     .tracking-kpi span { display: block; color: var(--muted); font-size: 11px; line-height: 1.25; }
     .tracking-kpi strong { display: block; margin-top: 5px; color: var(--navy); font-size: 22px; line-height: 1; }
     .tracking-kpi.approved { border-top-color: #35b779; }
     .tracking-kpi.not-approved { border-top-color: #ee433f; }
+    .tracking-kpi.no-programming { border-top-color: #7d8795; }
     .tracking-kpi-note { margin: 7px 2px 0; color: var(--muted); font-size: 10px; }
     .tracking-visual-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(280px, .8fr); gap: 10px; margin-top: 10px; }
     .tracking-visual-grid .panel { box-shadow: 0 4px 14px rgba(25,25,25,.05); }
@@ -699,8 +700,9 @@
           <article class="tracking-kpi"><span>% de actividades que cumplen</span><strong id="activities-target-pct">78.2%</strong></article>
           <article class="tracking-kpi approved"><span>Proyectos que aprueban el hito</span><strong id="projects-approved">15</strong></article>
           <article class="tracking-kpi not-approved"><span>Proyectos que no aprueban el hito</span><strong id="projects-not-approved">1</strong></article>
+          <article class="tracking-kpi no-programming"><span>Proyectos sin actividades programadas</span><strong id="projects-no-programming">3</strong></article>
         </div>
-        <p class="tracking-kpi-note" id="tracking-evaluable-note">16 proyectos evaluables: aprueban cuando al menos el 50% de sus actividades alcanza el 75% de avance.</p>
+        <p class="tracking-kpi-note" id="tracking-evaluable-note">19 proyectos: 15 aprueban, 1 no aprueba y 3 no tienen actividades programadas.</p>
         <div class="tracking-visual-grid">
           <article class="panel panel-pad">
             <div class="chart-title"><div><h3>Cumplimiento de metas por actividad</h3><p>Distribución de actividades programadas según su porcentaje de avance</p></div></div>
@@ -1112,7 +1114,7 @@
         if (category) counts[category.key] += 1;
         else unregistered += 1;
       }));
-      return { counts, total:Object.values(counts).reduce((total, value) => total + value, 0), unregistered };
+      return { counts, total:Object.values(counts).reduce((total, value) => total + value, 0), unregistered, unregisteredLabel:'No registrado' };
     }
     function projectDistribution(items) {
       const counts = Object.fromEntries(projectComplianceCategories.map(category => [category.key, 0]));
@@ -1123,7 +1125,7 @@
         if (category) counts[category.key] += 1;
         else unregistered += 1;
       });
-      return { counts, total:Object.values(counts).reduce((total, value) => total + value, 0), unregistered };
+      return { counts, total:Object.values(counts).reduce((total, value) => total + value, 0), unregistered, unregisteredLabel:'Sin programación' };
     }
     function complianceChartMarkup(categories, distribution) {
       if (!distribution.total) return '<div class="empty">No registrado para la selección actual.</div>';
@@ -1131,7 +1133,22 @@
         const value = distribution.counts[category.key] || 0;
         const percentage = value / distribution.total * 100;
         return `<div class="compliance-row" style="--status-color:${category.color}"><div class="compliance-label"><i></i><span>${esc(category.label)}<small>${esc(category.range)}</small></span></div><div class="compliance-track"><i class="compliance-fill" style="width:${percentage}%"></i></div><strong class="compliance-value">${number(value)}<small>${percentage.toFixed(1)}%</small></strong></div>`;
-      }).join('') + (distribution.unregistered ? `<p class="tracking-note">No registrado: ${number(distribution.unregistered)}</p>` : '');
+      }).join('') + (distribution.unregistered ? `<p class="tracking-note">${esc(distribution.unregisteredLabel || 'No registrado')}: ${number(distribution.unregistered)}</p>` : '');
+    }
+
+    function projectApprovalStatus(project) {
+      if (!project.activities_programmed) return 'no-programming';
+      const conclusion = normalize(project.activity_detail?.totals?.conclusion || '');
+      if (conclusion === 'cumple') return 'approved';
+      if (conclusion === 'no cumple') return 'not-approved';
+      return project.physical >= 50 ? 'approved' : 'not-approved';
+    }
+
+    function conclusionMismatch(project) {
+      if (!project.activities_programmed) return false;
+      const conclusion = normalize(project.activity_detail?.totals?.conclusion || '');
+      if (!['cumple','no cumple'].includes(conclusion)) return false;
+      return (conclusion === 'cumple') !== (project.physical >= 50);
     }
 
     function aggregateTracking(items) {
@@ -1160,8 +1177,10 @@
           activities_programmed: activitiesProgrammed,
           activities_met: activitiesMet,
           activities_meeting_target_pct: activitiesProgrammed ? activitiesMet / activitiesProgrammed * 100 : 0,
-          projects_approved: items.filter(project => project.activities_programmed > 0 && project.physical >= 50).length,
-          projects_not_approved: items.filter(project => project.activities_programmed > 0 && project.physical < 50).length
+          projects_approved: items.filter(project => projectApprovalStatus(project) === 'approved').length,
+          projects_not_approved: items.filter(project => projectApprovalStatus(project) === 'not-approved').length,
+          projects_no_programming: items.filter(project => projectApprovalStatus(project) === 'no-programming').length,
+          conclusion_mismatches: items.filter(conclusionMismatch).length
         },
         financial: {
           programmed_budget: programmedBudget,
@@ -1184,14 +1203,18 @@
       const aggregated = aggregateTracking(currentTrackingProjects());
       const physical = aggregated.physical;
       const financial = aggregated.financial;
-      els.trackingSourceNote.textContent = `Fuente: ${number(month.available_reports)} archivos ISM de “${month.source}”, pestaña “3. Reportes - SyM”, bloque “${month.milestone}”. Una actividad cumple desde 75% de avance; un proyecto aprueba cuando al menos 50% de sus actividades cumple. Los valores no programados se muestran como “Sin dato” y no se clasifican como cero.`;
+      els.trackingSourceNote.textContent = `Fuente: ${number(month.available_reports)} archivos ISM de “${month.source}”, pestaña “3. Reportes - SyM”, bloque “${month.milestone}”. Una actividad cumple desde 75% de avance; un proyecto aprueba desde 50% de actividades cumplidas. Los proyectos sin metas se muestran como “Sin programación” y no se clasifican como cero.`;
       document.getElementById('tracking-project-count').textContent = number(physical.projects);
       document.getElementById('activities-programmed').textContent = number(physical.activities_programmed);
       document.getElementById('activities-met').textContent = number(physical.activities_met);
       document.getElementById('activities-target-pct').textContent = `${physical.activities_meeting_target_pct.toFixed(1)}%`;
       document.getElementById('projects-approved').textContent = number(physical.projects_approved);
       document.getElementById('projects-not-approved').textContent = number(physical.projects_not_approved);
-      document.getElementById('tracking-evaluable-note').textContent = `${number(physical.projects_approved + physical.projects_not_approved)} proyectos evaluables: aprueban cuando al menos el 50% de sus actividades alcanza el 75% de avance.${physical.projects_with_physical_data < physical.projects ? ` ${number(physical.projects - physical.projects_with_physical_data)} sin programación física no se clasifican.` : ''}`;
+      document.getElementById('projects-no-programming').textContent = number(physical.projects_no_programming);
+      const approvedLabel = `${number(physical.projects_approved)} ${physical.projects_approved === 1 ? 'aprobado' : 'aprobados'}`;
+      const notApprovedLabel = `${number(physical.projects_not_approved)} ${physical.projects_not_approved === 1 ? 'no aprobado' : 'no aprobados'}`;
+      const noProgrammingLabel = `${number(physical.projects_no_programming)} sin actividades programadas`;
+      document.getElementById('tracking-evaluable-note').textContent = `${number(physical.projects)} proyectos: ${approvedLabel}, ${notApprovedLabel} y ${noProgrammingLabel}. El 50% exacto se considera “Cumple”.${physical.conclusion_mismatches ? ` ${number(physical.conclusion_mismatches)} discrepancia(s) con la conclusión del ISM; se conserva la conclusión original.` : ''}`;
       document.getElementById('budget-programmed').textContent = moneyExact(financial.programmed_budget);
       document.getElementById('budget-executed').textContent = moneyExact(financial.executed_budget);
       document.getElementById('budget-execution-pct').textContent = `${financial.budget_execution_pct.toFixed(1)}%`;
@@ -1252,8 +1275,9 @@
       els.drawer.classList.add('tracking-detail');
       document.getElementById('drawer-heading').textContent = 'Seguimiento del proyecto';
       els.drawerDependency.textContent = project.code;
-      const physicalValue = project.physical === null || project.physical === undefined ? 'Sin dato' : `${project.physical.toFixed(1)}%`;
+      const physicalValue = projectApprovalStatus(project) === 'no-programming' ? 'Sin programación' : (project.physical === null || project.physical === undefined ? 'Sin dato' : `${project.physical.toFixed(1)}%`);
       const projectCategory = matchingComplianceCategory(project.physical, projectComplianceCategories);
+      const projectCategoryLabel = projectApprovalStatus(project) === 'no-programming' ? 'Sin programación' : (projectCategory ? projectCategory.label : 'Sin dato');
       const detail = project.activity_detail || { activities: [], totals: {} };
       const activityRows = detail.activities.map(item => {
         const noProgramming = (item.meta_programmed === null || item.meta_programmed === undefined || item.meta_programmed === 0) && (item.progress_pct === null || item.progress_pct === undefined);
@@ -1268,7 +1292,7 @@
           <div class="fact"><span>Actividades programadas</span><strong>${number(project.activities_programmed)}</strong></div>
           <div class="fact"><span>Actividades que cumplen</span><strong>${number(project.activities_met)}</strong></div>
           <div class="fact"><span>Cumplimiento físico</span><strong>${physicalValue}</strong></div>
-          <div class="fact"><span>Clasificación del hito</span><strong>${projectCategory ? esc(projectCategory.label) : 'Sin dato'}</strong></div>
+          <div class="fact"><span>Clasificación del hito</span><strong>${esc(projectCategoryLabel)}</strong></div>
           <div class="fact"><span>Presupuesto programado</span><strong>${moneyExact(project.financial_programmed)}</strong></div>
           <div class="fact"><span>Presupuesto ejecutado</span><strong>${moneyExact(project.financial_executed)}</strong></div>
           <div class="fact"><span>Ejecución financiera</span><strong>${project.financial === null || project.financial === undefined ? 'Sin dato' : `${project.financial.toFixed(1)}%`}</strong></div>
@@ -1296,8 +1320,8 @@
       els.trackingRows.innerHTML = items.map(project => `<tr>
         <td data-label="Código" class="num">${esc(project.code)}</td>
         <td data-label="CITE / UT"><span class="cite-name">${esc(project.name)}</span></td>
-        <td data-label="Actividades" class="num">${project.physical === null || project.physical === undefined ? 'Sin dato' : `${number(project.activities_met)} / ${number(project.activities_programmed)}`}</td>
-        <td data-label="Cumplimiento físico">${progressMarkup(project.physical, 'physical')}</td>
+        <td data-label="Actividades" class="num">${projectApprovalStatus(project) === 'no-programming' ? 'Sin programación' : `${number(project.activities_met)} / ${number(project.activities_programmed)}`}</td>
+        <td data-label="Cumplimiento físico">${projectApprovalStatus(project) === 'no-programming' ? '<span class="status-inline" style="--status-color:#7d8795">Sin programación</span>' : progressMarkup(project.physical, 'physical')}</td>
         <td data-label="Programado" class="num">${money(project.financial_programmed)}</td>
         <td data-label="Ejecutado" class="num">${money(project.financial_executed)}</td>
         <td data-label="Ejecución financiera">${progressMarkup(project.financial, 'financial')}</td>
