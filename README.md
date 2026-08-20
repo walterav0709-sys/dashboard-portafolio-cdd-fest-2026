@@ -69,7 +69,8 @@ GitHub no funciona como una sincronización automática tipo OneDrive: cada actu
 
 - Este repositorio contiene únicamente el sitio publicable.
 - No agregues archivos Excel de los reportes ISM o RSM, documentos internos, credenciales ni archivos `.env`.
-- Se recomienda mantener el repositorio como **privado**.
+- GitHub Pages presenta una pantalla de usuario y contraseña antes de cargar el dashboard. Es una barrera visual superficial, no autenticación de servidor.
+- No utilices esta capa para información confidencial: una persona con conocimientos técnicos todavía puede acceder al archivo estático del dashboard.
 - Los datos faltantes del dashboard no deben completarse ni inferirse fuera de las fuentes autorizadas.
 
 ## Uso

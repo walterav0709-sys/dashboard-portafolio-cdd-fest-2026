@@ -9,11 +9,15 @@ test("genera el punto de entrada del sitio", async () => {
   await access(new URL("dist/.openai/hosting.json", root));
 });
 
-test("GitHub Pages abre directamente el dashboard público", async () => {
+test("GitHub Pages solicita credenciales antes de cargar el dashboard", async () => {
   const index = await readFile(new URL("index.html", root), "utf8");
   await access(new URL(".nojekyll", root));
-  assert.match(index, /src="\.\/public\/dashboard_portafolio_ptp\.html"/);
+  assert.match(index, /id="username"/);
+  assert.match(index, /id="password"/);
+  assert.match(index, /sessionStorage\.getItem\("dashboard-access"\)/);
+  assert.match(index, /dashboard\.src = "\.\/public\/dashboard_portafolio_ptp\.html"/);
   assert.match(index, /<iframe/);
+  assert.doesNotMatch(index, /dese:dese/i);
 });
 
 test("incluye el dashboard y sus tres pestañas", async () => {
