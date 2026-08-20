@@ -313,13 +313,26 @@
     .tracking-heading h2 { margin: 0; color: var(--navy); font-size: 17px; }
     .tracking-heading span { color: var(--muted); font-size: 11px; }
     .tracking-kpis { display: grid; gap: 9px; }
-    .tracking-kpis.physical { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+    .tracking-kpis.physical { grid-template-columns: repeat(6, minmax(0, 1fr)); }
     .tracking-kpis.financial { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .tracking-kpi { min-height: 84px; padding: 10px 12px; border: 1px solid var(--line); border-top: 3px solid var(--gold); border-radius: 9px; background: #fff; }
     .tracking-kpi span { display: block; color: var(--muted); font-size: 11px; line-height: 1.25; }
     .tracking-kpi strong { display: block; margin-top: 5px; color: var(--navy); font-size: 22px; line-height: 1; }
+    .tracking-kpi.approved { border-top-color: #35b779; }
+    .tracking-kpi.not-approved { border-top-color: #ee433f; }
+    .tracking-kpi-note { margin: 7px 2px 0; color: var(--muted); font-size: 10px; }
     .tracking-visual-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(280px, .8fr); gap: 10px; margin-top: 10px; }
     .tracking-visual-grid .panel { box-shadow: 0 4px 14px rgba(25,25,25,.05); }
+    .compliance-chart { display: grid; gap: 11px; }
+    .compliance-row { --status-color: var(--gold); display: grid; grid-template-columns: minmax(128px,.9fr) minmax(150px,1.3fr) 72px; gap: 10px; align-items: center; }
+    .compliance-label { display: grid; grid-template-columns: 9px 1fr; gap: 7px; align-items: start; color: var(--navy); font-size: 11px; font-weight: 800; }
+    .compliance-label i { width: 9px; height: 9px; margin-top: 2px; border-radius: 50%; background: var(--status-color); }
+    .compliance-label small { display: block; margin-top: 2px; color: var(--muted); font-size: 9px; font-weight: 600; }
+    .compliance-track { height: 12px; overflow: hidden; border-radius: 99px; background: #e9ecef; }
+    .compliance-fill { display: block; height: 100%; min-width: 0; border-radius: inherit; background: var(--status-color); }
+    .compliance-value { color: var(--navy); font-size: 11px; text-align: right; }
+    .compliance-value small { display: block; margin-top: 1px; color: var(--muted); font-size: 9px; font-weight: 600; }
+    .status-inline { display: inline-flex; align-items: center; gap: 5px; margin-top: 5px; padding: 3px 7px; border-radius: 99px; color: #fff; background: var(--status-color); font-size: 9px; font-weight: 900; }
     .finance-dashboard-grid { display: grid; grid-template-columns: minmax(310px, .8fr) minmax(560px, 1.4fr); gap: 10px; margin-top: 10px; }
     .finance-dashboard-grid .panel, .financing-table-panel { box-shadow: 0 4px 14px rgba(25,25,25,.05); }
     .financing-use-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; }
@@ -490,6 +503,7 @@
       .map-detail { min-height: auto; }
       .tracking-kpis.financial { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .tracking-visual-grid { grid-template-columns: 1fr; }
+      .compliance-row { grid-template-columns: minmax(115px,.8fr) minmax(130px,1.2fr) 68px; }
       .financing-use-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       .rsm-grid, .rsm-findings { grid-template-columns: 1fr; }
     }
@@ -542,6 +556,7 @@
     }
     @media (max-width: 390px) {
       .tracking-kpis.physical, .tracking-kpis.financial { grid-template-columns: 1fr; }
+      .compliance-row { grid-template-columns: 112px minmax(100px,1fr) 62px; gap: 7px; }
       .activity-summary { grid-template-columns: 1fr; }
     }
   </style>
@@ -679,22 +694,21 @@
         <div class="tracking-heading"><h2 id="physical-heading">Ejecución física</h2><span>Actividades del periodo seleccionado</span></div>
         <div class="tracking-kpis physical">
           <article class="tracking-kpi"><span>Número de proyectos</span><strong id="tracking-project-count">19</strong></article>
-          <article class="tracking-kpi"><span>Proyectos con información física</span><strong id="projects-physical-data">16</strong></article>
           <article class="tracking-kpi"><span>Actividades programadas</span><strong id="activities-programmed">101</strong></article>
           <article class="tracking-kpi"><span>Actividades que cumplen la meta</span><strong id="activities-met">79</strong></article>
           <article class="tracking-kpi"><span>% de actividades que cumplen</span><strong id="activities-target-pct">78.2%</strong></article>
+          <article class="tracking-kpi approved"><span>Proyectos que aprueban el hito</span><strong id="projects-approved">15</strong></article>
+          <article class="tracking-kpi not-approved"><span>Proyectos que no aprueban el hito</span><strong id="projects-not-approved">1</strong></article>
         </div>
+        <p class="tracking-kpi-note" id="tracking-evaluable-note">16 proyectos evaluables: aprueban cuando al menos el 50% de sus actividades alcanza el 75% de avance.</p>
         <div class="tracking-visual-grid">
           <article class="panel panel-pad">
-            <div class="chart-title"><div><h3>Cobertura de actividades</h3><p>Comparación respecto del total programado</p></div></div>
-            <div class="summary-chart" id="activity-chart" role="img" aria-label="Gráfico comparativo de actividades programadas y en ejecución"></div>
+            <div class="chart-title"><div><h3>Cumplimiento de metas por actividad</h3><p>Distribución de actividades programadas según su porcentaje de avance</p></div></div>
+            <div class="compliance-chart" id="activity-chart" role="img" aria-label="Distribución semaforizada del cumplimiento de actividades"></div>
           </article>
           <article class="panel panel-pad">
-            <div class="chart-title"><div><h3>Cumplimiento de la meta</h3><p>Proporción consolidada de actividades</p></div></div>
-            <div class="radial-wrap">
-              <div class="radial-meter" id="physical-gauge"><span class="radial-value" id="physical-gauge-value">87.6%</span></div>
-              <div class="radial-copy"><strong>Actividades que cumplen la meta</strong><span>El medidor se recalcula según el mes y el tipo de CITE/UT seleccionados.</span></div>
-            </div>
+            <div class="chart-title"><div><h3>Cumplimiento del hito por proyecto</h3><p>Clasificación según el porcentaje de actividades que alcanza al menos 75%</p></div></div>
+            <div class="compliance-chart" id="project-compliance-chart" role="img" aria-label="Distribución semaforizada del cumplimiento del hito por proyecto"></div>
           </article>
         </div>
       </section>
@@ -1071,6 +1085,55 @@
       return month.projects.filter(project => !els.trackingType.value || project.cite_type === els.trackingType.value);
     }
 
+    const activityComplianceCategories = [
+      { key:'critical', label:'Crítico', range:'0%–24%', color:'#e43d3d', match:value => value < 25 },
+      { key:'low', label:'Bajo', range:'25%–49%', color:'#f47b3c', match:value => value >= 25 && value < 50 },
+      { key:'progress', label:'En progreso', range:'50%–74%', color:'#e9b83f', match:value => value >= 50 && value < 75 },
+      { key:'met', label:'Cumple', range:'75%–99%', color:'#35b779', match:value => value >= 75 && value < 100 },
+      { key:'total', label:'Cumplimiento total', range:'100% o más', color:'#2f67b1', match:value => value >= 100 }
+    ];
+    const projectComplianceCategories = [
+      { key:'critical', label:'Crítico', range:'0%–24%', color:'#e43d3d', match:value => value < 25 },
+      { key:'low', label:'Bajo', range:'25%–49%', color:'#f47b3c', match:value => value >= 25 && value < 50 },
+      { key:'acceptable', label:'Aceptable', range:'50%–74%', color:'#e9b83f', match:value => value >= 50 && value < 75 },
+      { key:'high', label:'Alto', range:'75%–99%', color:'#35b779', match:value => value >= 75 && value < 100 },
+      { key:'full', label:'Pleno', range:'100%', color:'#2f67b1', match:value => value >= 100 }
+    ];
+    function matchingComplianceCategory(value, categories) {
+      if (value === null || value === undefined || !Number.isFinite(Number(value))) return null;
+      return categories.find(category => category.match(Number(value))) || null;
+    }
+    function activityDistribution(items) {
+      const counts = Object.fromEntries(activityComplianceCategories.map(category => [category.key, 0]));
+      let unregistered = 0;
+      items.forEach(project => (project.activity_detail?.activities || []).forEach(activity => {
+        if (activity.meta_programmed === null || activity.meta_programmed === undefined || activity.meta_programmed === 0) return;
+        const category = matchingComplianceCategory(activity.progress_pct, activityComplianceCategories);
+        if (category) counts[category.key] += 1;
+        else unregistered += 1;
+      }));
+      return { counts, total:Object.values(counts).reduce((total, value) => total + value, 0), unregistered };
+    }
+    function projectDistribution(items) {
+      const counts = Object.fromEntries(projectComplianceCategories.map(category => [category.key, 0]));
+      let unregistered = 0;
+      items.forEach(project => {
+        if (!project.activities_programmed || project.physical === null || project.physical === undefined) { unregistered += 1; return; }
+        const category = matchingComplianceCategory(project.physical, projectComplianceCategories);
+        if (category) counts[category.key] += 1;
+        else unregistered += 1;
+      });
+      return { counts, total:Object.values(counts).reduce((total, value) => total + value, 0), unregistered };
+    }
+    function complianceChartMarkup(categories, distribution) {
+      if (!distribution.total) return '<div class="empty">No registrado para la selección actual.</div>';
+      return categories.map(category => {
+        const value = distribution.counts[category.key] || 0;
+        const percentage = value / distribution.total * 100;
+        return `<div class="compliance-row" style="--status-color:${category.color}"><div class="compliance-label"><i></i><span>${esc(category.label)}<small>${esc(category.range)}</small></span></div><div class="compliance-track"><i class="compliance-fill" style="width:${percentage}%"></i></div><strong class="compliance-value">${number(value)}<small>${percentage.toFixed(1)}%</small></strong></div>`;
+      }).join('') + (distribution.unregistered ? `<p class="tracking-note">No registrado: ${number(distribution.unregistered)}</p>` : '');
+    }
+
     function aggregateTracking(items) {
       const activitiesProgrammed = sum(items, project => project.activities_programmed);
       const activitiesMet = sum(items, project => project.activities_met);
@@ -1096,7 +1159,9 @@
           projects_with_physical_data: items.filter(project => project.physical !== null && project.physical !== undefined).length,
           activities_programmed: activitiesProgrammed,
           activities_met: activitiesMet,
-          activities_meeting_target_pct: activitiesProgrammed ? activitiesMet / activitiesProgrammed * 100 : 0
+          activities_meeting_target_pct: activitiesProgrammed ? activitiesMet / activitiesProgrammed * 100 : 0,
+          projects_approved: items.filter(project => project.activities_programmed > 0 && project.physical >= 50).length,
+          projects_not_approved: items.filter(project => project.activities_programmed > 0 && project.physical < 50).length
         },
         financial: {
           programmed_budget: programmedBudget,
@@ -1119,22 +1184,20 @@
       const aggregated = aggregateTracking(currentTrackingProjects());
       const physical = aggregated.physical;
       const financial = aggregated.financial;
-      els.trackingSourceNote.textContent = `Fuente: ${number(month.available_reports)} archivos ISM de “${month.source}”, pestaña “3. Reportes - SyM”, bloque “${month.milestone}”. Los proyectos sin meta física programada se muestran como “Sin dato”. No se incorporan alertas ni clasificaciones de estado.`;
+      els.trackingSourceNote.textContent = `Fuente: ${number(month.available_reports)} archivos ISM de “${month.source}”, pestaña “3. Reportes - SyM”, bloque “${month.milestone}”. Una actividad cumple desde 75% de avance; un proyecto aprueba cuando al menos 50% de sus actividades cumple. Los valores no programados se muestran como “Sin dato” y no se clasifican como cero.`;
       document.getElementById('tracking-project-count').textContent = number(physical.projects);
-      document.getElementById('projects-physical-data').textContent = number(physical.projects_with_physical_data);
       document.getElementById('activities-programmed').textContent = number(physical.activities_programmed);
       document.getElementById('activities-met').textContent = number(physical.activities_met);
       document.getElementById('activities-target-pct').textContent = `${physical.activities_meeting_target_pct.toFixed(1)}%`;
+      document.getElementById('projects-approved').textContent = number(physical.projects_approved);
+      document.getElementById('projects-not-approved').textContent = number(physical.projects_not_approved);
+      document.getElementById('tracking-evaluable-note').textContent = `${number(physical.projects_approved + physical.projects_not_approved)} proyectos evaluables: aprueban cuando al menos el 50% de sus actividades alcanza el 75% de avance.${physical.projects_with_physical_data < physical.projects ? ` ${number(physical.projects - physical.projects_with_physical_data)} sin programación física no se clasifican.` : ''}`;
       document.getElementById('budget-programmed').textContent = moneyExact(financial.programmed_budget);
       document.getElementById('budget-executed').textContent = moneyExact(financial.executed_budget);
       document.getElementById('budget-execution-pct').textContent = `${financial.budget_execution_pct.toFixed(1)}%`;
-      const activityRows = [
-        { label:'Actividades programadas', value:physical.activities_programmed },
-        { label:'Actividades que cumplen la meta', value:physical.activities_met }
-      ];
-      document.getElementById('activity-chart').innerHTML = activityRows.map(row => `<div class="summary-chart-row"><span>${esc(row.label)}</span><div class="summary-track"><i class="summary-fill" style="width:${physical.activities_programmed ? row.value / physical.activities_programmed * 100 : 0}%"></i></div><strong>${number(row.value)}</strong></div>`).join('');
-      document.getElementById('physical-gauge').style.setProperty('--value', `${physical.activities_meeting_target_pct}%`);
-      document.getElementById('physical-gauge-value').textContent = `${physical.activities_meeting_target_pct.toFixed(1)}%`;
+      const selectedProjects = currentTrackingProjects();
+      document.getElementById('activity-chart').innerHTML = complianceChartMarkup(activityComplianceCategories, activityDistribution(selectedProjects));
+      document.getElementById('project-compliance-chart').innerHTML = complianceChartMarkup(projectComplianceCategories, projectDistribution(selectedProjects));
       const budgetRows = [
         { label:'Presupuesto programado', value:financial.programmed_budget },
         { label:'Ejecutado', value:financial.executed_budget, financial:true }
@@ -1168,7 +1231,10 @@
     function progressMarkup(value, kind) {
       const missing = value === null || value === undefined;
       const safeValue = missing ? 0 : Math.max(0, Math.min(100, value));
-      return `<div class="progress-wrap"><div class="progress-label"><span>${missing ? 'Sin dato' : `${value.toFixed(1)}%`}</span></div><div class="progress-track" aria-label="${missing ? 'Sin dato' : `${value.toFixed(1)}%`}"><i class="progress-fill ${kind === 'financial' ? 'financial' : ''}" style="width:${safeValue}%"></i></div></div>`;
+      const category = kind === 'physical' ? matchingComplianceCategory(value, projectComplianceCategories) : null;
+      const fillStyle = category ? `background:${category.color}` : '';
+      const categoryMarkup = category ? `<span class="status-inline" style="--status-color:${category.color}">${esc(category.label)}</span>` : '';
+      return `<div class="progress-wrap"><div class="progress-label"><span>${missing ? 'Sin dato' : `${value.toFixed(1)}%`}</span></div><div class="progress-track" aria-label="${missing ? 'Sin dato' : `${value.toFixed(1)}%`}"><i class="progress-fill ${kind === 'financial' ? 'financial' : ''}" style="width:${safeValue}%;${fillStyle}"></i></div>${categoryMarkup}</div>`;
     }
 
     function projectChartBar(label, value, kind) {
@@ -1187,6 +1253,7 @@
       document.getElementById('drawer-heading').textContent = 'Seguimiento del proyecto';
       els.drawerDependency.textContent = project.code;
       const physicalValue = project.physical === null || project.physical === undefined ? 'Sin dato' : `${project.physical.toFixed(1)}%`;
+      const projectCategory = matchingComplianceCategory(project.physical, projectComplianceCategories);
       const detail = project.activity_detail || { activities: [], totals: {} };
       const activityRows = detail.activities.map(item => {
         const noProgramming = (item.meta_programmed === null || item.meta_programmed === undefined || item.meta_programmed === 0) && (item.progress_pct === null || item.progress_pct === undefined);
@@ -1201,6 +1268,7 @@
           <div class="fact"><span>Actividades programadas</span><strong>${number(project.activities_programmed)}</strong></div>
           <div class="fact"><span>Actividades que cumplen</span><strong>${number(project.activities_met)}</strong></div>
           <div class="fact"><span>Cumplimiento físico</span><strong>${physicalValue}</strong></div>
+          <div class="fact"><span>Clasificación del hito</span><strong>${projectCategory ? esc(projectCategory.label) : 'Sin dato'}</strong></div>
           <div class="fact"><span>Presupuesto programado</span><strong>${moneyExact(project.financial_programmed)}</strong></div>
           <div class="fact"><span>Presupuesto ejecutado</span><strong>${moneyExact(project.financial_executed)}</strong></div>
           <div class="fact"><span>Ejecución financiera</span><strong>${project.financial === null || project.financial === undefined ? 'Sin dato' : `${project.financial.toFixed(1)}%`}</strong></div>
