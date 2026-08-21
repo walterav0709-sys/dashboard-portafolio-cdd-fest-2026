@@ -427,12 +427,6 @@
     .summary-track { height: 12px; overflow: hidden; border-radius: 99px; background: #e8e8e8; }
     .summary-fill { display: block; height: 100%; min-width: 2px; border-radius: inherit; background: var(--gold); }
     .summary-fill.financial { background: var(--navy); }
-    .project-budget-panel { margin-top: 10px; box-shadow: 0 4px 14px rgba(25,25,25,.05); }
-    .project-budget-chart { display: grid; gap: 8px; max-height: 390px; overflow-y: auto; padding-right: 5px; }
-    .project-budget-row { display: grid; grid-template-columns: minmax(180px,.9fr) minmax(220px,1.5fr) 68px; gap: 10px; align-items: center; }
-    .project-budget-row > span { color: var(--navy); font-size: 10px; font-weight: 800; line-height: 1.25; }
-    .project-budget-row > span small { display: block; margin-top: 2px; color: var(--muted); font-size: 9px; font-weight: 600; }
-    .project-budget-row strong { color: var(--navy); font-size: 10px; text-align: right; }
     .radial-wrap { display: grid; grid-template-columns: 150px 1fr; gap: 16px; align-items: center; }
     .radial-meter { --value: 0%; width: 140px; aspect-ratio: 1; display: grid; place-items: center; border-radius: 50%; background: conic-gradient(var(--gold) 0 var(--value), #e7e7e7 var(--value) 100%); }
     .radial-meter::before { content: ""; grid-area: 1/1; width: 102px; aspect-ratio: 1; border-radius: 50%; background: #fff; }
@@ -839,10 +833,6 @@
             <div class="financing-use-grid" id="financing-use-cards"></div>
           </article>
         </div>
-        <article class="panel panel-pad project-budget-panel" id="project-budget-panel" hidden>
-          <div class="chart-title"><div><h3>Ejecución financiera por proyecto</h3><p>Porcentaje ejecutado sobre el presupuesto global programado</p></div></div>
-          <div class="project-budget-chart" id="project-budget-chart" role="img" aria-label="Distribución de la ejecución financiera acumulada por proyecto"></div>
-        </article>
         <article class="panel panel-pad financing-table-panel">
           <div class="chart-title"><div><h3>Resumen por fuente de financiamiento</h3><p>Montos y porcentaje de utilización para la selección activa</p></div></div>
           <table class="compact-table financing-table"><caption class="sr-only">Resumen del presupuesto del periodo seleccionado</caption><thead><tr><th>Fuente</th><th>Programado</th><th>Ejecutado</th><th>% utilización</th></tr></thead><tbody id="budget-summary-rows"></tbody></table>
@@ -982,7 +972,6 @@
       trackingSourceNote: document.getElementById('tracking-source-note'),
       physicalTrackingSection: document.getElementById('physical-tracking-section'),
       budgetProjectCountCard: document.getElementById('budget-project-count-card'), budgetProjectCount: document.getElementById('budget-project-count'),
-      projectBudgetPanel: document.getElementById('project-budget-panel'), projectBudgetChart: document.getElementById('project-budget-chart'),
       trackingTableHead: document.getElementById('tracking-table-head'), trackingTableCopy: document.getElementById('tracking-table-copy'), trackingTableCaption: document.getElementById('tracking-table-caption'),
       financialHeadingCopy: document.getElementById('financial-heading-copy'),
       rsmMonth: document.getElementById('rsm-month'), rsmType: document.getElementById('rsm-type'),
@@ -1372,14 +1361,6 @@
         const utilization = row.programmed ? `${(row.executed / row.programmed * 100).toFixed(1)}%` : 'Sin programación';
         return `<tr><td data-label="Fuente">${esc(row.label)}</td><td data-label="Programado" class="num">${moneyExact(row.programmed)}</td><td data-label="Ejecutado" class="num">${moneyExact(row.executed)}</td><td data-label="% utilización" class="num">${utilization}</td></tr>`;
       }).join('');
-      els.projectBudgetPanel.hidden = !isGlobal;
-      if (isGlobal) {
-        els.projectBudgetChart.innerHTML = selectedProjects.map(project => {
-          const value = project.financial === null || project.financial === undefined ? null : project.financial;
-          const safeValue = value === null ? 0 : Math.max(0, Math.min(100, value));
-          return `<div class="project-budget-row"><span>${esc(project.name)}<small>${esc(project.code)}</small></span><div class="progress-track" aria-label="${esc(project.name)}: ${value === null ? 'No registrado' : `${value.toFixed(1)}%`}"><i class="progress-fill financial" style="width:${safeValue}%"></i></div><strong>${value === null ? 'S/D' : `${value.toFixed(1)}%`}</strong></div>`;
-        }).join('') || '<div class="empty">No hay proyectos para la selección actual.</div>';
-      }
     }
 
     function currentTrackingProjects() {
