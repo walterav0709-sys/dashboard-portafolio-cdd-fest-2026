@@ -15,7 +15,7 @@ test("GitHub Pages solicita credenciales antes de cargar el dashboard", async ()
   assert.match(index, /id="username"/);
   assert.match(index, /id="password"/);
   assert.match(index, /sessionStorage\.getItem\("dashboard-access"\)/);
-  assert.match(index, /dashboard\.src = "\.\/public\/dashboard_portafolio_ptp\.html"/);
+  assert.match(index, /dashboard\.src = "\.\/public\/dashboard_portafolio_ptp\.html\?v=[a-f0-9]{12}"/);
   assert.match(index, /<iframe/);
   assert.doesNotMatch(index, /dese:dese/i);
 });
@@ -37,6 +37,8 @@ test("incluye el dashboard y sus tres pestañas", async () => {
   assert.match(html, /Desaprueba/);
   assert.match(html, /Aprueba/);
   assert.doesNotMatch(html, /Cumplimiento del hito por proyecto/);
+  assert.doesNotMatch(html, /Ejecución financiera por proyecto/);
+  assert.doesNotMatch(html, /id="project-budget-panel"|id="project-budget-chart"/);
   assert.match(html, /Descargar PTP fuente/);
   assert.match(html, /Descargar infografía de la cartera/);
   assert.doesNotMatch(html, /<script\s+src=/i);
