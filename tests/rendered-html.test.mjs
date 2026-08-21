@@ -31,6 +31,14 @@ test("incluye el dashboard y sus tres pestañas", async () => {
   assert.match(html, /id="tab-tracking"/);
   assert.match(html, /id="tab-rsm"/);
   assert.match(html, /Presupuesto global/);
+  assert.match(html, /Ejecución física acumulada/);
+  assert.match(html, /id="global-physical-programmed"/);
+  assert.match(html, /id="global-physical-executed"/);
+  assert.match(html, /id="global-physical-pct"/);
+  assert.match(html, /id="global-physical-project-chart"/);
+  assert.match(html, /Meta física programada/);
+  assert.match(html, /Validación de datos/);
+  assert.match(html, /Celdas fuente/);
   assert.match(html, /Registro RSM/);
   assert.match(html, /Cumplimiento del hito/);
   assert.match(html, /Distribución de proyectos según estado de aprobación del hito/);
